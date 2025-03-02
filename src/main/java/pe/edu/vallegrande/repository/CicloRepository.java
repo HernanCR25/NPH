@@ -1,9 +1,12 @@
 package pe.edu.vallegrande.repository;
 
+import org.springframework.data.r2dbc.repository.Modifying;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import pe.edu.vallegrande.model.CicloModel;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
 public interface CicloRepository extends ReactiveCrudRepository<CicloModel, Long> {
@@ -13,5 +16,10 @@ public interface CicloRepository extends ReactiveCrudRepository<CicloModel, Long
 
     // Buscar ciclos por su estado (activo o inactivo)
     Flux<CicloModel> findByStatus(String status);
+
+    // Inactivar un ciclo por ID
+    @Modifying
+    @Query("UPDATE cycle_life SET status = 'I' WHERE id = :id")
+    Mono<Void> deactivateCiclo(Long id);
 }
 

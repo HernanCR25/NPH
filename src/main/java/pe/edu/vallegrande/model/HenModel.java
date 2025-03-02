@@ -11,29 +11,17 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("cycle_life")
-public class CicloModel {
+@Table("hens")
+public class HenModel {
 
     @Id
     private Long id;
 
-    @Column("hen_id")
-    private Long henId; 
+    @Column("arrival_date")
+    private LocalDate arrivalDate;
 
-    @Column("type_ito")
-    private String typeIto;
-
-    @Column("name_ito")
-    private String nameIto;
-
-    @Column("type_time")
-    private String typeTime;
-
-    @Column("times")
-    private Integer times;
-
-    @Column("end_date") 
-    private LocalDate endDate;
+    @Column("quantity")
+    private Integer quantity;
 
     @Column("status")
     private String status;

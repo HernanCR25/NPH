@@ -7,6 +7,8 @@ import pe.edu.vallegrande.repository.CicloRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+
 @Service
 public class CicloService {
 
@@ -34,12 +36,12 @@ public class CicloService {
 
     // Obtener ciclos activos
     public Flux<CicloModel> getActiveCiclos() {
-        return cicloRepository.findByStatus("A"); // Filtra por status "A" (Activo)
+        return cicloRepository.findByStatus("A");
     }
 
     // Obtener ciclos inactivos
     public Flux<CicloModel> getInactiveCiclos() {
-        return cicloRepository.findByStatus("I"); // Filtra por status "I" (Inactivo)
+        return cicloRepository.findByStatus("I");
     }
 
     // Crear un nuevo ciclo
@@ -51,6 +53,7 @@ public class CicloService {
     public Mono<CicloModel> updateCiclo(Long id, CicloModel ciclo) {
         return cicloRepository.findById(id)
                 .flatMap(existingCiclo -> {
+                    existingCiclo.setHenId(ciclo.getHenId());
                     existingCiclo.setTypeIto(ciclo.getTypeIto());
                     existingCiclo.setNameIto(ciclo.getNameIto());
                     existingCiclo.setTypeTime(ciclo.getTypeTime());
@@ -65,19 +68,19 @@ public class CicloService {
     }
 
     // Inactivar un ciclo por ID (eliminación lógica)
-    public Mono<CicloModel> deactivateCiclo(Long id) {
-        return cicloRepository.findById(id)
-                .flatMap(ciclo -> {
-                    ciclo.setStatus("I"); // Cambia el estado a "Inactivo"
-                    return cicloRepository.save(ciclo);
-                });
-    }
+public Mono<CicloModel> deactivateCiclo(Long id) {
+    return cicloRepository.findById(id) // Buscar el ciclo por ID
+            .flatMap(ciclo -> {
+                ciclo.setStatus("I"); // Cambiar estado a inactivo
+                return cicloRepository.save(ciclo); // Guardar cambios
+            });
+}
 
     // Activar un ciclo por ID
     public Mono<CicloModel> activateCiclo(Long id) {
         return cicloRepository.findById(id)
                 .flatMap(ciclo -> {
-                    ciclo.setStatus("A"); // Cambia el estado a "Activo"
+                    ciclo.setStatus("A");
                     return cicloRepository.save(ciclo);
                 });
     }

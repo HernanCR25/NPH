@@ -1,0 +1,80 @@
+package pe.edu.vallegrande.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pe.edu.vallegrande.model.HenModel;
+import pe.edu.vallegrande.repository.HenRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.time.LocalDate; // Importación agregada
+
+@Service
+public class HenService {
+
+    private final HenRepository henRepository;
+
+    @Autowired
+    public HenService(HenRepository henRepository) {
+        this.henRepository = henRepository;
+    }
+
+    // Obtener todas las gallinas
+    public Flux<HenModel> getAllHens() {
+        return henRepository.findAll();
+    }
+
+    // Obtener una gallina por ID
+    public Mono<HenModel> getHenById(Long id) {
+        return henRepository.findById(id);
+    }
+
+    // Obtener gallinas activas
+    public Flux<HenModel> getActiveHens() {
+        return henRepository.findByStatus("A");
+    }
+
+    // Obtener gallinas inactivas
+    public Flux<HenModel> getInactiveHens() {
+        return henRepository.findByStatus("I");
+    }
+
+    // Crear una nueva gallina
+    public Mono<HenModel> createHen(HenModel hen) {
+        return henRepository.save(hen);
+    }
+
+    // Actualizar una gallina existente
+    public Mono<HenModel> updateHen(Long id, HenModel hen) {
+        return henRepository.findById(id)
+                .flatMap(existingHen -> {
+                    existingHen.setArrivalDate(hen.getArrivalDate()); // Manejo de LocalDate
+                    existingHen.setQuantity(hen.getQuantity());
+                    existingHen.setStatus(hen.getStatus());
+                    return henRepository.save(existingHen);
+                });
+    }
+
+    // Eliminar una gallina físicamente por ID
+    public Mono<Void> deleteHen(Long id) {
+        return henRepository.deleteById(id);
+    }
+
+    // Inactivar una gallina por ID (eliminación lógica)
+    public Mono<HenModel> deactivateHen(Long id) {
+        return henRepository.findById(id)
+                .flatMap(hen -> {
+                    hen.setStatus("I");
+                    return henRepository.save(hen);
+                });
+    }
+
+    // Activar una gallina por ID
+    public Mono<HenModel> activateHen(Long id) {
+        return henRepository.findById(id)
+                .flatMap(hen -> {
+                    hen.setStatus("A");
+                    return henRepository.save(hen);
+                });
+    }
+}
