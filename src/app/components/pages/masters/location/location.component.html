@@ -1,0 +1,88 @@
+<header class="bg-white shadow-md py-4">
+  <div class="w-full px-4">
+    <h1 class="text-3xl font-extrabold text-blue-900 dark:text-blue-400 md:text-4xl">
+      <span class="bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">
+        Ubicaciones
+      </span>
+    </h1>
+  </div>
+</header>
+
+<div class="container mx-auto my-6 p-4 bg-white shadow-md rounded-lg">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">Lista de Ubicaciones</h2>
+    <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded flex items-center text-base">
+      <i class="fas fa-plus mr-2"></i> Agregar Ubicación
+    </button>
+  </div>
+
+  <!-- Switcher de Estado -->
+    <div class="flex items-center mb-4">
+      <span class="mr-2 font-semibold">Mostrar:</span>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" class="sr-only peer" [(ngModel)]="statusActive" (change)="toggleStatus()">
+        <div class="w-11 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+        <span class="ml-3 text-sm font-medium text-gray-900">{{ statusFilter === 'A' ? 'Activos' : 'Inactivos' }}</span>
+      </label>
+    </div>
+
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full border-separate border-spacing-y-2 text-base">
+      <thead>
+        <tr>
+          <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">ID</th>
+          <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">País</th>
+          <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Departamento</th>
+          <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Provincia</th>
+          <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Distrito</th>
+          <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Estado</th>
+          <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ubicacion of paginatedUbicaciones" class="bg-gray-50 hover:bg-gray-100 text-center">
+          <td class="px-4 py-3">{{ ubicacion.id }}</td>
+          <td class="px-4 py-3">{{ ubicacion.country }}</td>
+          <td class="px-4 py-3">{{ ubicacion.department }}</td>
+          <td class="px-4 py-3">{{ ubicacion.province }}</td>
+          <td class="px-4 py-3">{{ ubicacion.district }}</td>
+          <td class="px-4 py-3">
+            <span 
+              class="inline-flex w-5 h-5 rounded-full"
+              [ngClass]="{'bg-green-500': ubicacion.status === 'A', 'bg-red-500': ubicacion.status === 'I'}">
+            </span>
+          </td>
+          <td class="px-4 py-3 flex justify-center space-x-2">
+            <button class="text-blue-500 hover:text-blue-700 text-lg">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="text-red-500 hover:text-red-700 text-lg">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex justify-center mt-4 space-x-3 text-base">
+    <button 
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded disabled:opacity-50"
+      (click)="prevPage()"
+      [disabled]="page === 1">
+      Anterior
+    </button>
+
+    <span class="font-semibold text-gray-700">
+      Página {{ page }} de {{ totalPages }}
+    </span>
+
+    <button 
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded disabled:opacity-50"
+      (click)="nextPage()"
+      [disabled]="page === totalPages">
+      Siguiente
+    </button>
+  </div>
+</div>

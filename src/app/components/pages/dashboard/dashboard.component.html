@@ -1,0 +1,73 @@
+<div class="min-h-screen bg-gray-100 p-2">
+  <!-- Encabezado -->
+  <header class="bg-white shadow-md rounded-lg p-3 flex justify-between items-center mb-4">
+    <h1 class="text-lg font-bold text-gray-800">📊 Dashboard Kardex</h1>
+    <button class="bg-blue-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700 transition text-sm">
+      ⬇️ Descargar Reporte
+    </button>
+  </header>
+
+  <!-- Tarjetas de Estadísticas -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white p-4 rounded-lg shadow-md flex items-center">
+      <div class="p-3 bg-blue-600 text-white rounded-full mr-3 text-xl">📦</div>
+      <div>
+        <h2 class="text-gray-700 text-sm">Stock Disponible</h2>
+        <p class="text-xl font-bold text-gray-900">1,850 kg</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow-md flex items-center">
+      <div class="p-3 bg-green-600 text-white rounded-full mr-3 text-xl">🔄</div>
+      <div>
+        <h2 class="text-gray-700 text-sm">Movimientos del Mes</h2>
+        <p class="text-xl font-bold text-gray-900">120 ingresos</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow-md flex items-center">
+      <div class="p-3 bg-red-600 text-white rounded-full mr-3 text-xl">⏳</div>
+      <div>
+        <h2 class="text-gray-700 text-sm">Stock Crítico</h2>
+        <p class="text-xl font-bold text-gray-900">150 kg</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico de Consumo (Ancho Completo, Altura Reducida) -->
+  <div class="bg-white mt-3 p-3 rounded-lg shadow-md w-full">
+    <h2 class="text-gray-800 font-bold mb-2 text-sm text-center">📈 Consumo Mensual</h2>
+    <div class="w-full">
+      <canvas #chartCanvas class="w-full h-[100px]"></canvas>
+    </div>
+  </div>
+
+  <!-- Tabla de Movimientos (Compacta) -->
+  <div class="bg-white mt-4 p-4 rounded-lg shadow-md">
+    <h2 class="text-gray-800 font-bold mb-3 text-sm">📋 Últimos Movimientos</h2>
+    <table class="w-full border-collapse border border-gray-200 text-sm">
+      <thead>
+        <tr class="bg-blue-600 text-white text-xs">
+          <th class="p-2 text-left">Fecha</th>
+          <th class="p-2 text-left">Producto</th>
+          <th class="p-2 text-left">Cantidad</th>
+          <th class="p-2 text-left">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-t hover:bg-gray-100 transition">
+          <td class="p-2">12/02/2025</td>
+          <td class="p-2">Alimento Gallina</td>
+          <td class="p-2">450 kg</td>
+          <td class="p-2 text-green-600 font-semibold">✔️ Ingresado</td>
+        </tr>
+        <tr class="border-t hover:bg-gray-100 transition">
+          <td class="p-2">10/02/2025</td>
+          <td class="p-2">Alimento Gallina</td>
+          <td class="p-2">300 kg</td>
+          <td class="p-2 text-red-600 font-semibold">❌ Retirado</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

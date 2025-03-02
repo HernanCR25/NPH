@@ -1,0 +1,153 @@
+<header class="bg-white shadow" style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem 0;">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" style="max-width: 80rem; padding-left: 2rem; padding-right: 2rem; text-align: left;">
+    <h1 class="text-7xl font-extrabold text-blue-900 dark:text-blue-400 md:text-6xl lg:text-7xl"
+        style="font-size: 3rem; font-weight: 800; color: #1E3A8A; margin: 0;">
+      <span class="text-transparent bg-clip-text bg-gradient-to-r to-blue-600 from-sky-400"
+            style="background: linear-gradient(to right, #38BDF8, #2563EB); -webkit-background-clip: text; color: transparent;">
+        Proveedor
+      </span>
+    </h1>
+  </div>
+</header>
+
+<div class="container mx-auto my-8 p-4 bg-white shadow-md rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Proveedor Listado</h2>
+
+  <!-- Entrada de datos -->
+  <div class="mb-4">
+    <input placeholder="Nombre" class="border p-2 mr-2 rounded" [(ngModel)]="nameFilter" (input)="filterSuppliers()" />
+    <input placeholder="Descripción" class="border p-2 mr-2 rounded" [(ngModel)]="descriptionFilter" (input)="filterSuppliers()" />
+    <button class="bg-blue-600 text-white px-4 py-2 rounded" (click)="openModal()">Agregar Proveedor</button>
+  </div>
+
+  <div class="mb-4 flex items-center">
+    <label for="statusSwitcher" class="mr-3 text-lg font-semibold">Estado:</label>
+
+    <!-- Switcher de estado -->
+    <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+      <input
+        type="checkbox"
+        id="statusSwitcher"
+        [(ngModel)]="isActive"
+        (change)="toggleStatus()"
+        class="toggle-input absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer"
+      />
+      <span
+        class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+        [ngClass]="isActive ? 'bg-green-500' : 'bg-red-500'">
+      </span>
+    </div>
+
+    <!-- Texto dinámico que cambia según el estado -->
+    <span class="ml-2 font-weight-bold" [ngClass]="isActive ? 'text-green-500' : 'text-red-500'">
+      {{ isActive ? 'Activo' : 'Inactivo' }}
+    </span>
+  </div>
+
+
+  <!-- Tabla de proveedores -->
+  <table class="min-w-full text-center border-separate" style="border-spacing: 0 10px;">
+    <thead>
+      <tr>
+        <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 rounded-tl-lg">Empresa</th>
+        <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100">Nombre</th>
+        <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100">Correo Electrónico</th>
+        <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100">Teléfono</th>
+        <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100">Descripción</th>
+        <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 rounded-tr-lg">Estado</th>
+        <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 rounded-tr-lg">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Fila de proveedores -->
+      <tr *ngFor="let supplier of filteredSuppliers">
+        <td class="px-6 py-4 bg-gray-100">{{ supplier.company }}</td>
+        <td class="px-6 py-4 bg-gray-100">{{ supplier.firstName }} {{ supplier.lastName }}</td>
+        <td class="px-6 py-4 bg-gray-100">{{ supplier.email }}</td>
+        <td class="px-6 py-4 bg-gray-100">{{ supplier.phone }}</td>
+        <td class="px-6 py-4 bg-gray-100">{{ supplier.notes }}</td>
+        <td class="px-6 py-4 bg-gray-100">{{ supplier.status === 'A' ? 'Activo' : 'Inactivo' }}</td>
+        <td class="px-6 py-4 bg-gray-100">
+          <!-- Mostrar botones según el estado -->
+          <button *ngIf="supplier.status === 'A'" class="bg-yellow-500 text-white px-3 py-1 rounded mr-2" (click)="editSupplierDetails(supplier)">Editar</button>
+          <button *ngIf="supplier.status === 'A'" class="bg-red-500 text-white px-3 py-1 rounded" (click)="supplier.id !== undefined ? inactivateSupplier(supplier.id) : null">Eliminar</button>
+          <button *ngIf="supplier.status === 'I'" class="bg-green-500 text-white px-3 py-1 rounded mr-2" (click)="supplier.id !== undefined ? activateSupplier(supplier.id) : null">Restaurar</button>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Estado de carga -->
+  <div *ngIf="isLoading" class="text-center mt-4">
+    <p>Cargando proveedores...</p>
+  </div>
+</div>
+
+<!-- Modal para agregar/editar proveedor -->
+<div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded-lg w-96">
+    <h2 class="text-2xl font-bold mb-4">{{ isEditMode ? 'Editar Proveedor' : 'Agregar Proveedor' }}</h2>
+    <form (ngSubmit)="isEditMode ? updateSupplier() : addSupplier()">
+      <div class="mb-4">
+        <label class="block text-lg font-semibold" for="company">Empresa</label>
+        <input class="border p-2 w-full rounded" id="company" [(ngModel)]="supplierForm.company" name="company" required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg font-semibold" for="firstName">Nombre</label>
+        <input class="border p-2 w-full rounded" id="firstName" [(ngModel)]="supplierForm.firstName" name="firstName" required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg font-semibold" for="lastName">Apellido</label>
+        <input class="border p-2 w-full rounded" id="lastName" [(ngModel)]="supplierForm.lastName" name="lastName" required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg font-semibold" for="email">Correo Electrónico</label>
+        <input class="border p-2 w-full rounded" id="email" [(ngModel)]="supplierForm.email" name="email" required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg font-semibold" for="phone">Teléfono</label>
+        <input class="border p-2 w-full rounded" id="phone" [(ngModel)]="supplierForm.phone" name="phone" required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg font-semibold" for="notes">Descripción</label>
+        <textarea class="border p-2 w-full rounded" id="notes" [(ngModel)]="supplierForm.notes" name="notes"></textarea>
+      </div>
+      <div class="flex justify-end">
+        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">{{ isEditMode ? 'Actualizar' : 'Agregar' }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<style>
+
+  /* El nuevo estilo de switcher */
+.toggle-input:checked {
+  transform: translateX(100%);
+  border-color: #28a745;
+}
+
+.toggle-input {
+  transition: transform 0.3s ease-in-out, border-color 0.3s ease;
+}
+
+.toggle-label {
+  transition: background-color 0.3s ease-in-out;
+}
+
+.toggle-label:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+</style>
+

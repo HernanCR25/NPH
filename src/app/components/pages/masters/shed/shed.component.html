@@ -1,0 +1,104 @@
+<div class="container mx-auto my-8 p-4 bg-white shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Listado de Galpones</h2>
+
+  <!-- Entrada de datos -->
+  <div class="mb-4">
+    <input placeholder="Nombre" class="border p-2 mr-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+      [(ngModel)]="searchCriteria.name" (input)="filterSheds()" />
+    <input placeholder="Ubicación" class="border p-2 mr-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+      [(ngModel)]="searchCriteria.location" (input)="filterSheds()" />
+    <input placeholder="Capacidad" class="border p-2 mr-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+      [(ngModel)]="searchCriteria.capacity" (input)="filterSheds()" />
+    <input placeholder="Tipo de Pollo" class="border p-2 mr-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+      [(ngModel)]="searchCriteria.chickenType" (input)="filterSheds()" />
+    <input placeholder="Fecha de Inspección"
+      class="border p-2 mr-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+      [(ngModel)]="searchCriteria.inspectionDate" (input)="filterSheds()" />
+    <button
+      class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 focus:ring-2 focus:ring-blue-400"
+      (click)="openModal()">
+      Agregar
+    </button>
+  </div>
+
+  <!-- Switcher -->
+  <div class="mb-4">
+    <button class="px-4 py-2 mr-2 rounded-lg" [class.bg-blue-600]="activeStatus === 'A'"
+      [class.text-white]="activeStatus === 'A'" [class.bg-gray-300]="activeStatus !== 'A'" (click)="switchStatus('A')">
+      Activos
+    </button>
+    <button class="px-4 py-2 rounded-lg" [class.bg-blue-600]="activeStatus === 'I'"
+      [class.text-white]="activeStatus === 'I'" [class.bg-gray-300]="activeStatus !== 'I'" (click)="switchStatus('I')">
+      Inactivos
+    </button>
+  </div>
+
+  <!-- Tabla -->
+  <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+    <table class="min-w-full text-center border-separate border-spacing-0">
+      <thead>
+        <tr>
+          <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 border-b-2 border-blue-200">Nombre</th>
+          <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 border-b-2 border-blue-200">Ubicación</th>
+          <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 border-b-2 border-blue-200">Capacidad</th>
+          <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 border-b-2 border-blue-200">Tipo de Pollo</th>
+          <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 border-b-2 border-blue-200">Fecha de
+            Inspección</th>
+          <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 border-b-2 border-blue-200">Estado</th>
+          <th class="px-6 py-3 text-lg font-semibold text-blue-900 bg-blue-100 border-b-2 border-blue-200">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let shed of filteredSheds">
+          <td class="px-6 py-4 bg-gray-100 border-b border-gray-200">{{ shed.name }}</td>
+          <td class="px-6 py-4 bg-gray-100 border-b border-gray-200">{{ shed.location }}</td>
+          <td class="px-6 py-4 bg-gray-100 border-b border-gray-200">{{ shed.capacity }}</td>
+          <td class="px-6 py-4 bg-gray-100 border-b border-gray-200">{{ shed.chickenType }}</td>
+          <td class="px-6 py-4 bg-gray-100 border-b border-gray-200">{{ shed.inspectionDate }}</td>
+          <td class="px-6 py-4 bg-gray-100 border-b border-gray-200">{{ shed.status }}</td>
+          <td class="px-6 py-4 bg-gray-100 border-b border-gray-200 space-x-2">
+            <button *ngIf="activeStatus === 'A'"
+              (click)="openModal(shed)"
+              class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-400 focus:ring-2 focus:ring-yellow-300">
+              Editar
+            </button>
+
+            <button *ngIf="activeStatus === 'A'" (click)="deleteShed(shed.id)"
+              class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-400 focus:ring-2 focus:ring-red-300">
+              Eliminar
+            </button>
+            <button *ngIf="activeStatus === 'I'" (click)="restoreShed(shed.id)"
+              class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-400 focus:ring-2 focus:ring-green-300">
+              Restaurar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50" *ngIf="isModalOpen">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <h3 class="text-xl font-bold mb-4">
+        {{ isEditMode ? 'Editar Galpón' : 'Agregar Galpón' }}
+      </h3>
+      <form (submit)="saveShed()">
+        <input type="text" placeholder="Nombre" [(ngModel)]="tempShed.name" class="w-full mb-2 border p-2 rounded-lg"
+          name="name" required />
+        <input type="text" placeholder="Ubicación" [(ngModel)]="tempShed.location"
+          class="w-full mb-2 border p-2 rounded-lg" name="location" required />
+        <input type="number" placeholder="Capacidad" [(ngModel)]="tempShed.capacity"
+          class="w-full mb-2 border p-2 rounded-lg" name="capacity" required />
+        <input type="text" placeholder="Tipo de Pollo" [(ngModel)]="tempShed.chickenType"
+          class="w-full mb-2 border p-2 rounded-lg" name="chickenType" required />
+        <input type="date" placeholder="Fecha de Inspección" [(ngModel)]="tempShed.inspectionDate"
+          class="w-full mb-2 border p-2 rounded-lg" name="inspectionDate" required />
+        <textarea placeholder="Nota" [(ngModel)]="tempShed.note" class="w-full mb-4 border p-2 rounded-lg"
+          name="note"></textarea>
+        <button type="button" class="bg-gray-300 px-4 py-2 rounded-lg mr-2" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Guardar</button>
+      </form>
+    </div>
+  </div>
+</div>
