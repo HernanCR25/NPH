@@ -1,0 +1,154 @@
+DROP TABLE IF EXISTS hens;
+CREATE TABLE hens (
+    id SERIAL PRIMARY KEY,
+    arrival_date DATE NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0), -- Cantidad de gallinas
+    status CHAR(1) DEFAULT 'A' -- Activo ('A') o Inactivo ('I')
+);
+
+DROP TABLE IF EXISTS cycle_life;
+CREATE TABLE cycle_life (
+    id SERIAL PRIMARY KEY,
+    hen_id INT REFERENCES hens(id) ON DELETE CASCADE,
+    type_ito VARCHAR(20) NOT NULL, 
+    name_ito VARCHAR(200) NOT NULL, 
+    type_time VARCHAR(15) NOT NULL, -- Día, Semana, etc.
+    times INT NOT NULL, -- Cantidad de días o semanas
+    end_date DATE NOT NULL,
+    status CHAR(1) DEFAULT 'A' -- Activo ('A') o Inactivo ('I')
+);
+
+-- Eliminar el trigger si ya existe
+DROP TRIGGER IF EXISTS set_end_date_trigger ON cycle_life;
+DROP FUNCTION IF EXISTS set_end_date();
+
+-- Crear la función para calcular end_date
+CREATE OR REPLACE FUNCTION calculate_end_date()
+RETURNS TRIGGER AS $$
+DECLARE
+    arrival_date DATE;
+BEGIN
+    -- Obtener la arrival_date de la tabla hens
+    SELECT h.arrival_date INTO arrival_date FROM hens h WHERE h.id = NEW.hen_id;
+    
+    IF arrival_date IS NULL THEN
+        RAISE EXCEPTION 'No se encontró la fecha de llegada para el lote con id: %', NEW.hen_id;
+    END IF;
+    
+    -- Calcular end_date en función de type_time y times
+    IF NEW.type_time = 'Día' THEN
+        NEW.end_date := arrival_date + NEW.times;
+    ELSIF NEW.type_time = 'Semana' THEN
+        NEW.end_date := arrival_date + (NEW.times * 7);
+    ELSE
+        RAISE EXCEPTION 'Tipo de tiempo no válido: %', NEW.type_time;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_calculate_end_date
+BEFORE INSERT OR UPDATE ON cycle_life
+FOR EACH ROW
+EXECUTE FUNCTION calculate_end_date();
+
+
+INSERT INTO hens (arrival_date, quantity)
+VALUES ('2024-07-01', 500);
+INSERT INTO hens (arrival_date, quantity)
+VALUES ('2025-12-25', 100);
+INSERT INTO hens (arrival_date, quantity)
+VALUES ('2021-01-03', 200);
+
+
+select * from hens;
+
+INSERT INTO cycle_life(hen_id,type_ito, name_ito, type_time, times)
+VALUES (1,'Vacunas','Planta de incubacion Marek + SB1','Día','1');
+
+select * from cycle_life;
+
+INSERT INTO cycle_life (hen_id,type_ito, name_ito, type_time, times)
+VALUES 
+(1,'Vacunas', 'Neumovirus (Cabeza Hinchada) una gota al ojo', 'Día', '3'),
+(1,'Vacunas', 'Gumboro (Cepa Intermedia) Una gota Nasal', 'Día', '8'),
+(1,'Vacunas', 'Newcastle + Bronquitis una gota Nasal (en el ojo)', 'Día', '10'),
+(1,'Vacunas', 'Revacunacion Gumboro una gota Nasal', 'Día', '20'),
+(1,'Vacunas', 'Inyectar Vacuna oleosa en forma subcutanea (HCI + NEW + Bronq) al cuello', 'Día', '20'),
+(1,'Vacunas', 'Revacunacion New + Bronq una gota al ojo', 'Día', '24'),
+(1,'Vacunas', 'Revacunacion New + Bronq una gota al ojo', 'Semana', '6'),
+(1,'Vacunas', 'Vacuna de laringotraqueitis Vectorizada con viruela puncion alar', 'Semana', '6'),
+(1,'Vacunas', 'Vacunacion tifovao aplicación al cuello', 'Semana', '8'),
+(1,'Vacunas', 'Reactificacion de pico', 'Semana', '10'),
+(1,'Vacunas', 'Revacunacion New + Bronq una gota al ojo', 'Semana', '10'),
+(1,'Vacunas', 'Revacunacion Neumovirus una gota al ojo', 'Semana', '14'),
+(1,'Vacunas', 'Vacunacion oleosa (quintuple) (EDS+NEW+BROQ+LT+TRT)', 'Semana', '16'),
+(1,'Vacunas', 'Revacunacion de tifovac al cuello', 'Semana', '18'),
+(1,'Vacunas', 'Newcastle + Bronquitis una gota Nasal (en el ojo) al mismo tiempo revacunacion de Newcastle Una gota al ojo', 'Semana', '18');
+
+INSERT INTO cycle_life (hen_id,type_ito, name_ito, type_time, times)
+VALUES 
+(1,'Alimentación', 'Inicio de gallina ponedora', 'Semana', '1'),
+(1,'Alimentación', 'Inicio de gallina ponedora', 'Semana', '2'),
+(1,'Alimentación', 'Inicio de gallina ponedora', 'Semana', '3'),
+(1,'Alimentación', 'Inicio de gallina ponedora', 'Semana', '4'),
+(1,'Alimentación', 'Inicio de gallina ponedora', 'Semana', '5'),
+(1,'Alimentación', 'Inicio de gallina ponedora', 'Semana', '6'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '7'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '8'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '9'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '10'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '11'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '12'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '13'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '14'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '15'),
+(1,'Alimentación', 'Crecimiento de gallina ponedora o desarrollo', 'Semana', '16'),
+(1,'Alimentación', 'Pre-postura Gallinas ponedoras', 'Semana', '17'),
+(1,'Alimentación', 'Pre-postura Gallinas ponedoras', 'Semana', '18'),
+(1,'Alimentación', 'Pre-postura Gallinas ponedoras', 'Semana', '19'),
+(1,'Alimentación', 'Pre-postura Gallinas ponedoras', 'Semana', '20'),
+(1,'Alimentación', 'Postura', 'Semana', '21'),
+(1,'Alimentación', 'Postura', 'Semana', '22');
+
+DROP TABLE IF EXISTS hens CASCADE;
+DROP TABLE IF EXISTS cycle_life
+
+CREATE OR REPLACE VIEW view_cycle_life AS
+SELECT 
+    cl.id AS cycle_life_id,
+    cl.hen_id,
+    h.arrival_date,
+    h.quantity,
+    cl.type_ito,
+    cl.name_ito,
+    cl.type_time,
+    cl.times,
+    cl.end_date,
+    cl.status
+FROM cycle_life cl
+JOIN hens h ON cl.hen_id = h.id;
+
+SELECT * FROM view_cycle_life;
+
+CREATE OR REPLACE FUNCTION update_end_date_on_hens_update()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE cycle_life
+    SET end_date = 
+        CASE 
+            WHEN type_time = 'Día' THEN NEW.arrival_date + times
+            WHEN type_time = 'Semana' THEN NEW.arrival_date + (times * 7)
+            ELSE end_date 
+        END
+    WHERE hen_id = NEW.id;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_end_date_on_hens_update
+AFTER UPDATE ON hens
+FOR EACH ROW
+EXECUTE FUNCTION update_end_date_on_hens_update();
