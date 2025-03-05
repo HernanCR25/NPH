@@ -29,6 +29,10 @@ public class HenService {
         return henRepository.findById(id);
     }
 
+    // Obtener una gallina por fecha
+    public Flux<HenModel> findByArrivalDate(LocalDate arrivalDate) {
+        return henRepository.findByArrivalDate(arrivalDate);
+    }
     // Obtener gallinas activas
     public Flux<HenModel> getActiveHens() {
         return henRepository.findByStatus("A");

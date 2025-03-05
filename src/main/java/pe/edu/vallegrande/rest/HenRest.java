@@ -6,6 +6,9 @@ import pe.edu.vallegrande.model.HenModel;
 import pe.edu.vallegrande.service.HenService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 
 @CrossOrigin("*")
 @RestController
@@ -67,5 +70,15 @@ public class HenRest {
     @PutMapping("/activar/{id}")
     public Mono<HenModel> activateHen(@PathVariable Long id) {
         return henService.activateHen(id);
+    }
+
+    @GetMapping("/buscar/{arrivalDate}")
+    public Flux<HenModel> getHensByArrivalDate(@PathVariable String arrivalDate) {
+        try {
+            LocalDate date = LocalDate.parse(arrivalDate); // Convertir String a LocalDate
+            return henService.findByArrivalDate(date);
+        } catch (DateTimeParseException e) {
+            return Flux.empty(); // Retorna vacío si la fecha no es válida
+        }
     }
 }
