@@ -20,8 +20,10 @@ export class HenComponent implements OnInit {
   totalPages: number = 0;
   statusFilter: 'A' | 'I' = 'A';
   statusActive: boolean = true;
+  nuevaGallina: Hen = { arrivalDate: new Date(), quantity: 0, status: 'A' };
+  mostrarModalAgregar: boolean = false;
 
-  constructor(private henService: HenService) { }
+  constructor(private henService: HenService) {}
 
   ngOnInit(): void {
     this.listarGallinas();
@@ -40,7 +42,9 @@ export class HenComponent implements OnInit {
   }
 
   filtrarGallinas(): void {
-    const filtradas = this.gallinas.filter(gallina => gallina.status === this.statusFilter);
+    const filtradas = this.gallinas.filter(
+      (gallina) => gallina.status === this.statusFilter
+    );
     this.totalPages = Math.ceil(filtradas.length / this.itemsPerPage);
     this.updatePaginatedData(filtradas);
   }
@@ -71,7 +75,24 @@ export class HenComponent implements OnInit {
       this.filtrarGallinas();
     }
   }
-
+  abrirModalAgregar(): void {
+    this.nuevaGallina = { arrivalDate: new Date(), quantity: 0, status: 'A' }; // Estado por defecto
+    this.mostrarModalAgregar = true;
+  }
+  
+  guardarNuevaGallina(): void {
+    this.nuevaGallina.status = 'A'; // Asegurar estado activo
+    this.nuevaGallina.arrivalDate = new Date(this.nuevaGallina.arrivalDate); // Convertir a Date si es necesario
+  
+    this.henService.create(this.nuevaGallina).subscribe(() => {
+      this.listarGallinas();
+      this.cerrarModalAgregar();
+    });
+  }
+  
+  cerrarModalAgregar(): void {
+    this.mostrarModalAgregar = false;
+  }
   eliminarGallina(id: number): void {
     this.henService.delete(id).subscribe({
       next: () => {
@@ -93,34 +114,35 @@ export class HenComponent implements OnInit {
       },
     });
   }
+
   editarGallina(hen: Hen): void {
     this.gallinaSeleccionada = { ...hen }; // Clonamos el objeto para evitar modificar directamente la lista
     this.mostrarModal = true; // Abre el modal
   }
+
   cerrarModal(): void {
     this.mostrarModal = false;
     this.gallinaSeleccionada = null; // Resetea la selección
   }
-    
+
   guardarEdicion(): void {
     if (!this.gallinaSeleccionada) return;
-  
+
     this.henService.update(this.gallinaSeleccionada).subscribe({
       next: () => {
         // Actualizar la lista localmente sin recargar
-        this.gallinas = this.gallinas.map(gallina =>
-          gallina.id === this.gallinaSeleccionada?.id ? this.gallinaSeleccionada : gallina
+        this.gallinas = this.gallinas.map((gallina) =>
+          gallina.id === this.gallinaSeleccionada!.id ? { ...this.gallinaSeleccionada! } : gallina
         );
         this.filtrarGallinas(); // Refrescar la lista visible
         this.cerrarModal(); // Cerrar modal después de guardar
       },
       error: (err) => {
         console.error('Error al actualizar gallina', err);
-      }
+      },
     });
   }
-  
-  
+
   toggleGallina(id: number, status: 'A' | 'I'): void {
     if (status === 'A') {
       this.eliminarGallina(id);
@@ -128,5 +150,4 @@ export class HenComponent implements OnInit {
       this.restaurarGallina(id);
     }
   }
-
 }

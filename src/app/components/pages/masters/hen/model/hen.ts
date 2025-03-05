@@ -1,5 +1,5 @@
 export interface Hen {
-  id: number;
+  id?: number;
   arrivalDate: Date;
   quantity: number;
   status: string;

@@ -10,9 +10,10 @@
 <div class="container mx-auto my-6 p-4 bg-white shadow-md rounded-lg">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold">Lista de Gallinas</h2>
-      <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded flex items-center text-base">
-        <i class="fas fa-plus mr-2"></i> Agregar Gallina
-      </button>
+      <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded flex items-center text-base"
+      (click)="abrirModalAgregar()">
+      <i class="fas fa-plus mr-2"></i> Agregar Gallina
+    </button>
     </div>
   
     <!-- Switcher de Estado -->
@@ -47,7 +48,25 @@
       </div>
     </div>
   </div>
-  
+  <!-- Modal de agregar gallina -->
+  <div *ngIf="mostrarModalAgregar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h3 class="text-xl font-bold mb-4">Agregar Gallina</h3>
+
+      <label class="block mb-2">Fecha de llegada</label>
+      <input type="date" class="w-full border p-2 rounded" [(ngModel)]="nuevaGallina.arrivalDate">
+
+      <label class="block mb-2">Cantidad</label>
+      <input type="number" class="w-full border p-2 rounded" [(ngModel)]="nuevaGallina.quantity">
+
+      <div class="mt-4 flex justify-end space-x-2">
+        <button class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded" (click)="cerrarModalAgregar()">Cancelar</button>
+        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded" (click)="guardarNuevaGallina()">
+          Agregar
+        </button>
+      </div>
+    </div>
+</div>
   
     <div class="overflow-x-auto">
       <table class="min-w-full border-separate border-spacing-y-2 text-base">

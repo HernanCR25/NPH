@@ -32,7 +32,7 @@ export class HenService {
 
   create(hen: Hen): Observable<Hen> {
     return this.http
-      .post<Hen>(`${this.urlEndPoint}/create`, hen)
+      .post<Hen>(`${this.urlEndPoint}`, hen)
       .pipe(catchError(this.handleError));
   }
 
