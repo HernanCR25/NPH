@@ -16,7 +16,7 @@ export class LifecycleComponent implements OnInit {
   cicloSeleccionado: CicloVida | null = null;
   mostrarModal: boolean = false;
   page: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 15;
   totalPages: number = 0;
   statusFilter: 'A' | 'I' = 'A';
   statusActive: boolean = true;

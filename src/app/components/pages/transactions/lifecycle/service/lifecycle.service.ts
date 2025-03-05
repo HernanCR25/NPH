@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class CicloVidaService {
-  private urlEndPoint: string = 'https://8080-vallegrandeas-lifecycle-i3zc0bptppb.ws-us118.gitpod.io/cicloVida';
+  private urlEndPoint: string = 'https://8080-hernancr25-nph-t0qet4uo8zn.ws-us118.gitpod.io/cicloVida';
 
   constructor(private http: HttpClient) {}
 
