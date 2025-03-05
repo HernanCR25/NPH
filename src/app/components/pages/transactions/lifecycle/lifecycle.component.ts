@@ -20,11 +20,35 @@ export class LifecycleComponent implements OnInit {
   totalPages: number = 0;
   statusFilter: 'A' | 'I' = 'A';
   statusActive: boolean = true;
+  nuevoCiclo: CicloVida = { henId: 0, typeIto: '', nameIto: '', typeTime: '', times: 0, status: 'A' }; // El id y endDate se generan en el backend
+  mostrarModalCrear: boolean = false;
+  tipoBusqueda: string = '';// Para almacenar el valor de búsqueda por tipo
 
   constructor(private cicloVidaService: CicloVidaService) { }
 
   ngOnInit(): void {
     this.listarCiclos();
+  }
+
+  abrirModalCrear(): void {
+    this.mostrarModalCrear = true;
+  }
+
+  cerrarModalCrear(): void {
+    this.mostrarModalCrear = false;
+    this.nuevoCiclo = { henId: 0, typeIto: '', nameIto: '', typeTime: '', times: 0, status: 'A' }; // Resetear
+  }
+
+  crearCiclo(): void {
+    this.cicloVidaService.create(this.nuevoCiclo).subscribe({
+      next: (data) => {
+        this.listarCiclos(); // Recargar la lista de ciclos
+        this.cerrarModalCrear(); // Cerrar el modal
+      },
+      error: (err) => {
+        console.error('Error al crear ciclo', err);
+      },
+    });
   }
 
   listarCiclos(): void {
@@ -93,25 +117,24 @@ export class LifecycleComponent implements OnInit {
       },
     });
   }
+
   editarCiclo(ciclo: CicloVida): void {
     this.cicloSeleccionado = { ...ciclo }; // Clonamos el objeto para evitar modificar directamente la lista
     this.mostrarModal = true; // Abre el modal
   }
+
   cerrarModal(): void {
     this.mostrarModal = false;
     this.cicloSeleccionado = null; // Resetea la selección
   }
-    
+
   guardarEdicion(): void {
     if (!this.cicloSeleccionado) return;
-  
+
     this.cicloVidaService.update(this.cicloSeleccionado).subscribe({
       next: () => {
-        // Actualizar la lista localmente sin recargar
-        this.ciclos = this.ciclos.map(ciclo =>
-          ciclo.id === this.cicloSeleccionado?.id ? this.cicloSeleccionado : ciclo
-        );
-        this.filtrarCiclos(); // Refrescar la lista visible
+        // Recargar toda la lista de ciclos después de la edición
+        this.listarCiclos();
         this.cerrarModal(); // Cerrar modal después de guardar
       },
       error: (err) => {
@@ -119,8 +142,26 @@ export class LifecycleComponent implements OnInit {
       }
     });
   }
-  
-  
+ // Método para buscar ciclos por tipo (typeIto)
+ buscarCicloPorTipo(): void {
+  if (!this.tipoBusqueda) {
+    console.warn('Seleccione un tipo de búsqueda válido.');
+    // Si el campo está vacío, puedes llamar a listarCiclos() o manejar el caso según sea necesario
+    this.listarCiclos();
+    return;
+  }
+
+  // Llamamos al servicio para obtener los ciclos por tipo
+  this.cicloVidaService.getCiclosByTypeIto(this.tipoBusqueda).subscribe({
+    next: (data: CicloVida[]) => {
+      this.ciclos = data; // Asignamos los datos obtenidos
+      this.filtrarCiclos(); // Actualizamos la vista
+    },
+    error: (err) => {
+      console.error('Error al buscar ciclos por tipo', err);
+    }
+  });
+}
   toggleCiclo(id: number, status: 'A' | 'I'): void {
     if (status === 'A') {
       this.eliminarCiclo(id);
@@ -128,5 +169,5 @@ export class LifecycleComponent implements OnInit {
       this.restaurarCiclo(id);
     }
   }
-
 }
+

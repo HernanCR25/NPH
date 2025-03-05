@@ -11,11 +11,20 @@
 <div class="container mx-auto my-6 p-4 bg-white shadow-md rounded-lg">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold">Lista de Ciclos</h2>
-      <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded flex items-center text-base">
+      <button (click)="abrirModalCrear()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded flex items-center text-base">
         <i class="fas fa-plus mr-2"></i> Agregar Ciclo
       </button>
     </div>
-  
+    <div class="flex items-center mb-4">
+      <label class="mr-2 font-semibold">Buscar por Tipo de Ito:</label>
+      <input type="text" class="border p-2 rounded" [(ngModel)]="tipoBusqueda">
+      <button 
+        class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" 
+        (click)="buscarCicloPorTipo()">
+        Buscar
+      </button>
+    </div>
+    
     <!-- Switcher de Estado -->
       <div class="flex items-center mb-4">
         <span class="mr-2 font-semibold">Mostrar:</span>
@@ -30,14 +39,25 @@
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
       <h3 class="text-xl font-bold mb-4">Editar Ciclo</h3>
   
+      <label class="block mb-2">ID HEN</label>
+      <input type="number" class="w-full border p-2 rounded" [(ngModel)]="cicloSeleccionado.henId">
+
       <label class="block mb-2">Tipo de Ito</label>
-      <input type="text" class="w-full border p-2 rounded" [(ngModel)]="cicloSeleccionado.typeIto">
+      <select class="w-full border p-2 rounded" [(ngModel)]="cicloSeleccionado.typeIto">
+        <option value="Vacunas">Vacunas</option>
+        <option value="Alimentación">Alimentación</option>
+      </select>
+      
   
       <label class="block mb-2">Nombre del Ito</label>
       <input type="text" class="w-full border p-2 rounded" [(ngModel)]="cicloSeleccionado.nameIto">
 
       <label class="block mb-2">Tipo de tiempo</label>
-      <input type="text" class="w-full border p-2 rounded" [(ngModel)]="cicloSeleccionado.typeTime">
+      <select class="w-full border p-2 rounded" [(ngModel)]="cicloSeleccionado.typeTime">
+        <option value="Día">Día</option>
+        <option value="Semana">Semana</option>
+      </select>
+      
       
       <label class="block mb-2">Tiempo</label>
       <input type="number" class="w-full border p-2 rounded" [(ngModel)]="cicloSeleccionado.times">
@@ -54,7 +74,53 @@
       </div>
     </div>
   </div>
-  
+<!-- Modal de Crear Ciclo -->
+<div *ngIf="mostrarModalCrear" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h3 class="text-xl font-bold mb-4">Crear Ciclo</h3>
+
+        <!-- Campo para ID HEN -->
+        <label class="block mb-2">ID HEN</label>
+        <input type="number" class="w-full border p-2 rounded" [(ngModel)]="nuevoCiclo.henId">
+    <!-- Campo para Tipo de ITO -->
+    <label class="block mb-2">Tipo de ITO</label>
+    <select class="w-full border p-2 rounded" [(ngModel)]="nuevoCiclo.typeIto">
+      <option value="Vacunas">Vacunas</option>
+      <option value="Alimentación">Alimentación</option>
+    </select>
+    
+
+    <!-- Campo para Nombre de ITO -->
+    <label class="block mb-2">Nombre del ITO</label>
+    <input type="text" class="w-full border p-2 rounded" [(ngModel)]="nuevoCiclo.nameIto">
+
+ <!-- Campo para Tipo de Tiempo -->
+<label class="block mb-2">Tipo de Tiempo</label>
+<select class="w-full border p-2 rounded" [(ngModel)]="nuevoCiclo.typeTime">
+  <option value="Día">Día</option>
+  <option value="Semana">Semana</option>
+</select>
+
+
+    <!-- Campo para Tiempo -->
+    <label class="block mb-2">Tiempo</label>
+    <input type="number" class="w-full border p-2 rounded" [(ngModel)]="nuevoCiclo.times">
+
+    <!-- Campo para Estado -->
+    <label class="block mt-4 mb-2">Estado</label>
+    <select class="w-full border p-2 rounded" [(ngModel)]="nuevoCiclo.status">
+      <option value="A">Activo</option>
+      <option value="I">Inactivo</option>
+    </select>
+
+    <!-- Botones para cancelar o guardar -->
+    <div class="mt-4 flex justify-end space-x-2">
+      <button class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded" (click)="cerrarModalCrear()">Cancelar</button>
+      <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" (click)="crearCiclo()">Guardar</button>
+    </div>
+  </div>
+</div>
+
   
     <div class="overflow-x-auto">
       <table class="min-w-full border-separate border-spacing-y-2 text-base">
@@ -64,7 +130,7 @@
             <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Nombre de ITO</th>
             <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Tipo de Tiempo</th>
             <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Tiempo</th>
-            <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Aplica</th>
+            <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Fecha de aplicación</th>
             <th class="px-4 py-3 font-semibold text-blue-900 bg-blue-100">Acciones</th>
           </tr>
         </thead>

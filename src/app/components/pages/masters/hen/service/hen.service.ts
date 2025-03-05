@@ -73,7 +73,6 @@ export class HenService {
   }
 
   private handleError(error: any) {
-    // Agregar detalles del error para depuración
     console.error('Error al hacer la solicitud', error);
     if (error.status === 0) {
       return throwError('No se puede conectar al servidor');

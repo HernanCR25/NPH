@@ -11,6 +11,13 @@ export class CicloVidaService {
   private urlEndPoint: string = 'https://8080-hernancr25-nph-t0qet4uo8zn.ws-us118.gitpod.io/cicloVida';
 
   constructor(private http: HttpClient) {}
+  // Método para obtener ciclos por typeIto (Vacunas, Alimentos, etc.)
+  getCiclosByTypeIto(typeIto: string): Observable<CicloVida[]> {
+    const url = `${this.urlEndPoint}/type/${typeIto}`;
+    return this.http
+      .get<CicloVida[]>(url)
+      .pipe(catchError(this.handleError));  // Manejo de errores
+  }
 
   update(cicloVida: CicloVida): Observable<CicloVida> {
     const url = `${this.urlEndPoint}/update/${cicloVida.id}`;
@@ -32,7 +39,7 @@ export class CicloVidaService {
 
   create(cicloVida: CicloVida): Observable<CicloVida> {
     return this.http
-      .post<CicloVida>(`${this.urlEndPoint}/create`, cicloVida)
+      .post<CicloVida>(`${this.urlEndPoint}`, cicloVida)
       .pipe(catchError(this.handleError));
   }
 
@@ -53,7 +60,7 @@ export class CicloVidaService {
     }
 
     // Crear el objeto de datos necesario para el PUT, en caso de que sea necesario
-    const data = { status: 'I' }; // Esto depende de la estructura que espera tu backend
+    const data = { status: 'I' }; // Esto depende de la estructura que espera el backend
 
     return this.http
       .put<void>(`${this.urlEndPoint}/inactivar/${id}`, data)
@@ -70,7 +77,6 @@ export class CicloVidaService {
   }
 
   private handleError(error: any) {
-    // Agregar detalles del error para depuración
     console.error('Error al hacer la solicitud', error);
     if (error.status === 0) {
       return throwError('No se puede conectar al servidor');
