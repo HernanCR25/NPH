@@ -22,13 +22,30 @@ export class HenComponent implements OnInit {
   statusActive: boolean = true;
   nuevaGallina: Hen = { arrivalDate: new Date(), quantity: 0, status: 'A' };
   mostrarModalAgregar: boolean = false;
+  fechaBusqueda: string = ''; // Inicializa la variable con un string vacío
 
   constructor(private henService: HenService) {}
 
   ngOnInit(): void {
     this.listarGallinas();
   }
-
+  buscarGallinasPorFecha(): void {
+    if (!this.fechaBusqueda) {
+      console.warn('Seleccione una fecha válida.');
+      return;
+    }
+  
+    this.henService.getHensByDate(this.fechaBusqueda).subscribe({
+      next: (data) => {
+        this.gallinas = data;
+        this.filtrarGallinas(); // Asegurar que la vista se actualice correctamente
+      },
+      error: (err) => {
+        console.error('Error al buscar gallinas por fecha', err);
+      },
+    });
+  }
+  
   listarGallinas(): void {
     this.henService.getHens().subscribe({
       next: (data) => {

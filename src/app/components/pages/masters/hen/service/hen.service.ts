@@ -35,7 +35,10 @@ export class HenService {
       .post<Hen>(`${this.urlEndPoint}`, hen)
       .pipe(catchError(this.handleError));
   }
-
+ // Método para buscar gallinas por fecha
+ getHensByDate(arrivalDate: string): Observable<Hen[]> {
+  return this.http.get<Hen[]>(`${this.urlEndPoint}/buscar/${arrivalDate}`);
+}
   getHen(id: number): Observable<Hen> {
     return this.http
       .get<Hen>(`${this.urlEndPoint}/${id}`)
