@@ -23,11 +23,12 @@ export const MENU_ITEMS: Route[] = [
           { title: 'Tipo de Proveedores', path: '/Modulo-Galpon/Tipo-Proveedores' },
           { title: 'Galpón', path: '/Modulo-Galpon/Shed' },
           { title: 'Productos', path: '/Modulo-Galpon/Productos' },
-          { title: 'Ciclo de Vida', path: '/Modulo-Galpon/LifeCycle' },
+          { title: 'Gallinas', path: '/Modulo-Galpon/Hen' },
         ],
       },
       { title: 'Kardex de Alimentos', path: '/Modulo-Galpon/Kardex-Alimentos' },
       { title: 'Costos de Alimentos', path: '/Modulo-Galpon/Cost-Alimentos' },
+      { title: 'Ciclo de Vida', path: '/Modulo-Galpon/LifeCycle' },
     ],
   },
 

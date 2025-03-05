@@ -52,12 +52,12 @@ export const routes: Routes = [
           ).then((m) => m.LocationComponent),
       },
       {
-        path: 'LifeCycle',
-        title: 'Maestro Ciclo de Vida',
+        path: 'Hen',
+        title: 'Maestro Gallinas',
         loadComponent: () =>
           import(
-            './components/pages/masters/lifecycle/lifecycle.component'
-          ).then((m) => m.LifecycleComponent),
+            './components/pages/masters/hen/hen.component'
+          ).then((m) => m.HenComponent),
       },
       // Transaccionales
       {
@@ -75,6 +75,14 @@ export const routes: Routes = [
           import(
             './components/pages/transactions/costs-food/costs-food.component'
           ).then((m) => m.CostsFoodComponent),
+      },
+      {
+        path: 'LifeCycle',
+        title: 'Maestro Ciclo de Vida',
+        loadComponent: () =>
+          import(
+            './components/pages/transactions/lifecycle/lifecycle.component'
+          ).then((m) => m.LifecycleComponent),
       },
     ],
   },
