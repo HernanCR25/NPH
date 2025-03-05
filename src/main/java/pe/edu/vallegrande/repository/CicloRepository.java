@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import pe.edu.vallegrande.model.CicloModel;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.time.LocalDate;
+import org.springframework.data.r2dbc.repository.Query;
 
 @Repository
 public interface CicloRepository extends ReactiveCrudRepository<CicloModel, Long> {

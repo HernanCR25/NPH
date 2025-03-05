@@ -58,6 +58,7 @@ public class CicloService {
                     existingCiclo.setNameIto(ciclo.getNameIto());
                     existingCiclo.setTypeTime(ciclo.getTypeTime());
                     existingCiclo.setTimes(ciclo.getTimes());
+                    existingCiclo.setStatus(ciclo.getStatus());
                     return cicloRepository.save(existingCiclo);
                 });
     }
