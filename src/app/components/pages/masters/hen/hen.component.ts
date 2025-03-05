@@ -32,19 +32,22 @@ export class HenComponent implements OnInit {
   buscarGallinasPorFecha(): void {
     if (!this.fechaBusqueda) {
       console.warn('Seleccione una fecha válida.');
+      // Si el campo de fecha está vacío, volvemos a listar todas las gallinas
+      this.listarGallinas();
       return;
     }
   
     this.henService.getHensByDate(this.fechaBusqueda).subscribe({
       next: (data) => {
         this.gallinas = data;
-        this.filtrarGallinas(); // Asegurar que la vista se actualice correctamente
+        this.filtrarGallinas(); // Aseguramos que la vista se actualice correctamente
       },
       error: (err) => {
         console.error('Error al buscar gallinas por fecha', err);
       },
     });
   }
+  
   
   listarGallinas(): void {
     this.henService.getHens().subscribe({
