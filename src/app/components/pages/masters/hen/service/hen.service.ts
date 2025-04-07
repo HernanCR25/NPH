@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class HenService {
-  private urlEndPoint: string = 'https://8080-hernancr25-nph-t0qet4uo8zn.ws-us118.gitpod.io/hen';
+  private urlEndPoint: string = 'https://sturdy-space-robot-v95vr965rr4cwxqj-8080.app.github.dev/hen';
 
   constructor(private http: HttpClient) {}
 
@@ -18,7 +18,9 @@ export class HenService {
       .put<Hen>(url, hen)
       .pipe(catchError(this.handleError));
   }
-
+  getHenById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.urlEndPoint}/${id}`);
+  }
   getHens(): Observable<Hen[]> {
     return this.http
       .get<Hen[]>(this.urlEndPoint)

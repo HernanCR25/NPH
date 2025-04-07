@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CicloVida } from './model/lifecycle';
 import { CicloVidaService } from './service/lifecycle.service';
+import { HenService } from '../../masters/hen/service/hen.service';
 
 @Component({
   selector: 'app-lifecycle',
@@ -15,6 +16,8 @@ export class LifecycleComponent implements OnInit {
   paginaCiclos: CicloVida[] = [];
   cicloSeleccionado: CicloVida | null = null;
   mostrarModal: boolean = false;
+  mostrarModalDetalle: boolean = false;
+  cicloDetalle: any = null;
   page: number = 1;
   itemsPerPage: number = 15;
   totalPages: number = 0;
@@ -22,9 +25,13 @@ export class LifecycleComponent implements OnInit {
   statusActive: boolean = true;
   nuevoCiclo: CicloVida = { henId: 0, typeIto: '', nameIto: '', typeTime: '', times: 0, status: 'A' }; // El id y endDate se generan en el backend
   mostrarModalCrear: boolean = false;
-  tipoBusqueda: string = '';// Para almacenar el valor de búsqueda por tipo
+  mostrarModalEdicion: boolean = false;
+  tipoBusqueda: string = '';
 
-  constructor(private cicloVidaService: CicloVidaService) { }
+  constructor(
+    private cicloVidaService: CicloVidaService,
+    private henService: HenService // Inyectamos el servicio de Hen
+  ) { }
 
   ngOnInit(): void {
     this.listarCiclos();
@@ -99,25 +106,43 @@ export class LifecycleComponent implements OnInit {
   eliminarCiclo(id: number): void {
     this.cicloVidaService.delete(id).subscribe({
       next: () => {
-        this.listarCiclos();
+        window.location.reload();
       },
       error: (err) => {
         console.error('Error al eliminar el ciclo', err);
       },
     });
   }
-
+  verCiclo(ciclo: any) {
+    console.log("Detalles del ciclo:", ciclo);
+    // Aquí puedes abrir un modal o mostrar más detalles según necesites.
+  }
+  
   restaurarCiclo(id: number): void {
     this.cicloVidaService.activate(id).subscribe({
       next: () => {
-        this.listarCiclos();
+        window.location.reload();
       },
       error: (err) => {
         console.error('Error al restaurar el ciclo', err);
       },
     });
   }
-
+  abrirModalDetalle(ciclo: any) {
+    this.cicloDetalle = ciclo;
+    this.mostrarModalDetalle = true;
+  
+    if (ciclo.henId) {
+      this.henService.getHenById(ciclo.henId).subscribe((hen: any) => {
+        this.cicloDetalle.arrivalDate = hen.arrivalDate; // Agregamos arrivalDate
+      });
+    }
+  }
+  
+  cerrarModalDetalle() {
+    this.mostrarModalDetalle = false;
+    this.cicloDetalle = null;
+  }
   editarCiclo(ciclo: CicloVida): void {
     this.cicloSeleccionado = { ...ciclo }; // Clonamos el objeto para evitar modificar directamente la lista
     this.mostrarModal = true; // Abre el modal
@@ -127,6 +152,7 @@ export class LifecycleComponent implements OnInit {
     this.mostrarModal = false;
     this.cicloSeleccionado = null; // Resetea la selección
   }
+  
 
   guardarEdicion(): void {
     if (!this.cicloSeleccionado) return;
@@ -142,6 +168,7 @@ export class LifecycleComponent implements OnInit {
       }
     });
   }
+  
  // Método para buscar ciclos por tipo (typeIto)
  buscarCicloPorTipo(): void {
   if (!this.tipoBusqueda) {
@@ -170,4 +197,3 @@ export class LifecycleComponent implements OnInit {
     }
   }
 }
-
