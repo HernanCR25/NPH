@@ -1,0 +1,52 @@
+pipeline {
+  agent any
+
+  tools {
+    nodejs "node"
+  }
+
+  parameters {
+    string(name: 'container_name', defaultValue: 'pagina_web', description: 'Nombre del contenedor de docker.')
+    string(name: 'image_name', defaultValue: 'pagina_img', description: 'Nombre de la imagen docker.')
+    string(name: 'tag_image', defaultValue: 'lts', description: 'Tag de la imagen de la página.')
+    string(name: 'container_port', defaultValue: '80', description: 'Puerto que usa el contenedor')
+  }
+
+  stages {
+    stage('install') {
+      steps {
+        git branch: 'devlop_fe', url: 'https://github.com/HernanCR25/NPH.git'
+        sh 'npm install'
+      }
+    }
+
+    stage('test') {
+      steps {
+        sh 'npm run test'
+      }
+    }
+
+    stage('build') {
+      steps {
+        script {
+          try {
+            sh "docker stop ${params.container_name}"
+            sh "docker rm ${params.container_name}"
+            sh "docker rmi ${params.image_name}:${params.tag_image}"
+          } catch (Exception e) {
+            echo "No se pudo eliminar contenedor o imagen anterior: ${e.getMessage()}"
+          }
+
+          sh 'npm run build'
+          sh "docker build -t ${params.image_name}:${params.tag_image} ."
+        }
+      }
+    }
+
+    stage('deploy') {
+      steps {
+        sh "docker run -d -p ${params.container_port}:80 --name ${params.container_name} ${params.image_name}:${params.tag_image}"
+      }
+    }
+  }
+}
