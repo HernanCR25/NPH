@@ -1,0 +1,132 @@
+<div class="p-6 bg-blue-50 min-h-screen">
+    <!-- Título -->
+    <h2 class="text-2xl font-semibold text-blue-900 mb-4">Gestión de Ventas</h2>
+    
+    <!-- Botones principales (Agregar Venta, Boleta y Excel) -->
+    <div class="flex items-center mb-4 space-x-4">
+        <!-- Botón de Agregar Venta -->
+        <button 
+            (click)="openCreateModal()"
+            class="px-3 py-2 bg-green-500 text-white rounded flex items-center space-x-2 hover:bg-green-600 text-sm">
+            <i class="fas fa-cart-plus text-lg"></i>
+            <span>Agregar Venta</span>
+        </button>
+    </div>
+    
+    <!-- Barra de búsqueda -->
+    <div class="flex flex-wrap gap-2 mb-4 items-center">
+        <input 
+            type="text" 
+            [(ngModel)]="searchTerm" 
+            (input)="filterSales()" 
+            placeholder="Buscar por nombre..." 
+            class="p-2 border rounded w-full md:w-1/3"
+        />
+        <input 
+            type="date" 
+            [(ngModel)]="searchDate" 
+            class="p-2 border rounded"
+        />
+        <button 
+            (click)="filterByDate()" 
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Buscar por Fecha
+        </button>
+        <select [(ngModel)]="selectedProduct" (change)="filterByProduct()" class="p-2 border rounded">
+            <option value="">Todos los productos</option>
+            <option *ngFor="let product of products" [value]="product.id">{{ product.type }}</option>
+        </select>
+
+        <!-- Botones descargables (Boleta y Excel) alineados a la derecha -->
+        <div class="ml-auto flex items-center space-x-4">
+            <!-- Botón Boleta -->
+            <button 
+                class="px-3 py-2 bg-yellow-500 text-white rounded flex items-center space-x-2 hover:bg-yellow-600 text-sm">
+                <i class="fas fa-file-invoice text-lg"></i>
+                <span>Boleta</span>
+            </button>
+            
+            <!-- Botón Excel -->
+            <button 
+                class="px-3 py-2 bg-blue-500 text-white rounded flex items-center space-x-2 hover:bg-blue-600 text-sm">
+                <i class="fas fa-file-excel text-lg"></i>
+                <span>Excel</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenedor con desplazamiento horizontal solo si es necesario -->
+    <div class="overflow-x-auto w-full">
+        <!-- Tabla de ventas -->
+        <table class="w-full border-separate border-spacing-y-2 text-sm md:text-base">
+            <thead>
+                <tr class="bg-blue-200 text-blue-900 text-center">
+                    <!--<th class="px-2 py-3 font-semibold hidden md:table-cell">Carrito</th>-->
+                    <th class="px-2 py-3 font-ng servesemibold">Fecha de Venta</th>
+                    <th class="px-2 py-3 font-semibold">Nombre</th>
+                    <th class="px-2 py-3 font-semibold hidden md:table-cell">RUC</th>
+                    <th class="px-2 py-3 font-semibold hidden lg:table-cell">Dirección</th>
+                    <th class="px-2 py-3 font-semibold hidden md:table-cell">Producto</th>
+                    <th class="px-2 py-3 font-semibold">Peso (Kg)</th>
+                    <th class="px-2 py-3 font-semibold">Paquetes</th>
+                    <th class="px-2 py-3 font-semibold">Peso Total (Kg)</th>
+                    <th class="px-2 py-3 font-semibold">Precio/Kg</th>
+                    <th class="px-2 py-3 font-semibold">Precio Total</th>
+                    <th class="px-2 py-3 font-semibold">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let sale of paginatedSales" class="bg-white hover:bg-blue-50 text-center border-b">
+                    <!--<td class="px-2 py-3 hidden md:table-cell flex items-center justify-center space-x-2">
+                        <i class="fas fa-shopping-cart text-xl text-green-500"></i>
+                        <span class="text-blue-600 ml-2">{{ sale.id }}</span>
+                    </td>-->
+                    <td class="px-2 py-3">{{ sale.saleDate | date:'dd-MMM-yyyy' }}</td>
+                    <td class="px-2 py-3">{{ sale.name }}</td>
+                    <td class="px-2 py-3 hidden md:table-cell">{{ sale.ruc }}</td>
+                    <td class="px-2 py-3 hidden lg:table-cell">{{ sale.address }}</td>
+                    <td class="px-2 py-3 hidden md:table-cell">{{ getProductNameById(sale.productId) }}</td>
+                    <td class="px-2 py-3">{{ sale.weight }}</td>
+                    <td class="px-2 py-3">{{ sale.packages }}</td>
+                    <td class="px-2 py-3">{{ sale.totalWeight }}</td>
+                    <td class="px-2 py-3">S/ {{ sale.pricePerKg | number:'1.2-2' }}</td>
+                    <td class="px-2 py-3">{{ sale.totalPrice }}</td>
+                    <td class="px-2 py-3 flex justify-center space-x-2 text-lg">
+                        <button class="text-blue-500 hover:text-blue-700" (click)="openEditModal(sale)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="text-red-500 hover:text-red-700" (click)="deleteSale(sale.id)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button 
+                            class="text-yellow-500 hover:text-yellow-700 relative group"
+                            (click)="viewSaleDetails(sale.id)">
+                            <i class="fas fa-eye transition-transform duration-300 transform group-hover:scale-125"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="mt-4 flex justify-center space-x-2">
+        <button (click)="prevPage()" [disabled]="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Anterior
+        </button>
+        <span class="px-4 py-2 text-lg">{{ currentPage }} / {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Siguiente
+        </button>
+    </div>
+</div>
+
+<!-- Modal de boleta -->
+<app-model-sale
+    [isOpen]="isModalOpen"
+    [mode]="modalMode"
+    [saleData]="selectedSale"
+    (closeModal)="closeModal()"
+    (saleCreated)="handleSaleCreated($event)"
+    (saleUpdated)="handleSaleUpdated($event)">
+</app-model-sale>
