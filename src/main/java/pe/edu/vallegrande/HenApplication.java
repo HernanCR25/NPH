@@ -7,11 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
+
 @SpringBootApplication
 public class HenApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HenApplication.class, args);
+	}
 	@Configuration
 	public static class Myconfiguration{
 		@Bean
@@ -25,4 +27,5 @@ public class HenApplication {
 			};
 		}
 	}
+
 }
