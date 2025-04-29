@@ -34,6 +34,11 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.13.2</version>
+        </dependency>
 
         <!-- Lombok para reducir el boilerplate en el código -->
         <dependency>
