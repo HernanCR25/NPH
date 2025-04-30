@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8089
 
 spring:
   application:
@@ -7,5 +7,5 @@ spring:
 
   r2dbc:
     url: r2dbc:pool:postgresql://aws-0-us-west-1.pooler.supabase.com:5432/postgres
-    username: postgres.tuuxndxyhvjrnvqkgrma
-    password: UpfA3yGIo7CFFLyK
+    username: postgres.rwjixaghztcpqspihqvq
+    password: vallegrande2024@

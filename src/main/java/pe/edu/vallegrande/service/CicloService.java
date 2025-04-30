@@ -6,6 +6,10 @@ import pe.edu.vallegrande.model.CicloModel;
 import pe.edu.vallegrande.repository.CicloRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.web.reactive.function.client.WebClient;
+import pe.edu.vallegrande.dto.VaccineDTO;
+import pe.edu.vallegrande.dto.HenDTO;
+import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
 
@@ -74,13 +78,13 @@ public class CicloService {
     }
 
     // Inactivar un ciclo por ID (eliminación lógica)
-public Mono<CicloModel> deactivateCiclo(Long id) {
-    return cicloRepository.findById(id) // Buscar el ciclo por ID
-            .flatMap(ciclo -> {
-                ciclo.setStatus("I"); // Cambiar estado a inactivo
-                return cicloRepository.save(ciclo); // Guardar cambios
-            });
-}
+    public Mono<CicloModel> deactivateCiclo(Long id) {
+        return cicloRepository.findById(id) // Buscar el ciclo por ID
+                .flatMap(ciclo -> {
+                    ciclo.setStatus("I"); // Cambiar estado a inactivo
+                    return cicloRepository.save(ciclo); // Guardar cambios
+                });
+    }
 
     // Activar un ciclo por ID
     public Mono<CicloModel> activateCiclo(Long id) {
@@ -89,5 +93,35 @@ public Mono<CicloModel> deactivateCiclo(Long id) {
                     ciclo.setStatus("A");
                     return cicloRepository.save(ciclo);
                 });
+    }
+
+    // WebClient para consumir datos de Vaccines
+    private final WebClient vaccinesWebClient = WebClient.builder()
+    .baseUrl("https://ominous-space-rotary-phone-4jvwwp5qxgw4f5xg4-8080.app.github.dev/vaccines") // Ajusta la URL si cambia
+    .defaultHeader("Content-Type", "application/json")
+    .build();
+
+    // Método para consumir los datos de Shed desde otro microservicio
+    public Mono<VaccineDTO> getVaccinesFromExternal(Long vaccineId) {
+    return vaccinesWebClient.get()
+        .uri("/{id}", vaccineId) // Usa el shedId como parámetro en la URL
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(VaccineDTO.class);  // Retorna un Mono con el DTO de Shed
+    }
+
+    // WebClient para consumir datos de HEN
+    private final WebClient henWebClient = WebClient.builder()
+    .baseUrl("https://fantastic-engine-jvg57vjg975hv7j-8087.app.github.dev/hen") // Ajusta la URL si cambia
+    .defaultHeader("Content-Type", "application/json")
+    .build();
+
+    // Método para consumir los datos de Shed desde otro microservicio
+    public Mono<HenDTO> getHenFromExternal(Long henId) {
+    return henWebClient.get()
+        .uri("/{id}", henId) // Usa el shedId como parámetro en la URL
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(HenDTO.class);  // Retorna un Mono con el DTO de Shed
     }
 }
