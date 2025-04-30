@@ -6,8 +6,10 @@ import pe.edu.vallegrande.model.HenModel;
 import pe.edu.vallegrande.repository.HenRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDate; 
+import pe.edu.vallegrande.dto.ShedDTO;
+import org.springframework.http.MediaType;
 
 @Service
 public class HenService {
@@ -81,5 +83,20 @@ public class HenService {
                     hen.setStatus("A");
                     return henRepository.save(hen);
                 });
+    }
+
+    // WebClient para consumir datos de Shed
+    private final WebClient shedWebClient = WebClient.builder()
+    .baseUrl("https://scaling-spoon-g4r77vjxgqqxhw566-8084.app.github.dev/NPH/sheds") // Ajusta la URL si cambia
+    .defaultHeader("Content-Type", "application/json")
+    .build();
+
+    // Método para consumir los datos de Shed desde otro microservicio
+    public Mono<ShedDTO> getShedFromExternal(Long shedId) {
+    return shedWebClient.get()
+        .uri("/{id}", shedId) // Usa el shedId como parámetro en la URL
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(ShedDTO.class);  // Retorna un Mono con el DTO de Shed
     }
 }
