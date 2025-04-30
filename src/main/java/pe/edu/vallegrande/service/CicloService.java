@@ -54,23 +54,64 @@ public class CicloService {
     }
 
     // Crear un nuevo ciclo
+    //public Mono<CicloModel> createCiclo(CicloModel ciclo) {
+      //  return cicloRepository.save(ciclo);
+    //}
+    // Método para guardar un ciclo y calcular el endDate
     public Mono<CicloModel> createCiclo(CicloModel ciclo) {
-        return cicloRepository.save(ciclo);
+        return getHenFromExternal(ciclo.getHenId())  // Obtener la gallina desde el microservicio
+            .flatMap(henDTO -> {
+                LocalDate arrivalDate = henDTO.getArrivalDate();
+
+                if (arrivalDate == null) {
+                    return Mono.error(new RuntimeException("arrivalDate is null for henId: " + ciclo.getHenId()));
+                }
+
+                // Calcular el endDate según el tipo de tiempo y el número de veces
+                switch (ciclo.getTypeTime()) {
+                    case "Día":
+                        ciclo.setEndDate(arrivalDate.plusDays(ciclo.getTimes()));
+                        break;
+                    case "Semana":
+                        ciclo.setEndDate(arrivalDate.plusWeeks(ciclo.getTimes()));
+                        break;
+                    default:
+                        return Mono.error(new RuntimeException("Tipo de tiempo no válido: " + ciclo.getTypeTime()));
+                }
+
+                // Guardar el ciclo de vida
+                return cicloRepository.save(ciclo);
+            });
     }
 
     // Actualizar un ciclo existente
+    // Método para actualizar un ciclo y recalcular el endDate si es necesario
     public Mono<CicloModel> updateCiclo(Long id, CicloModel ciclo) {
-        return cicloRepository.findById(id)
-                .flatMap(existingCiclo -> {
-                    existingCiclo.setHenId(ciclo.getHenId());
-                    existingCiclo.setTypeIto(ciclo.getTypeIto());
-                    existingCiclo.setNameIto(ciclo.getNameIto());
-                    existingCiclo.setTypeTime(ciclo.getTypeTime());
-                    existingCiclo.setTimes(ciclo.getTimes());
-                    existingCiclo.setStatus(ciclo.getStatus());
-                    return cicloRepository.save(existingCiclo);
-                });
+        return getHenFromExternal(ciclo.getHenId())  // Obtener la gallina desde el microservicio
+            .flatMap(henDTO -> {
+                LocalDate arrivalDate = henDTO.getArrivalDate();
+
+                if (arrivalDate == null) {
+                    return Mono.error(new RuntimeException("arrivalDate is null for henId: " + ciclo.getHenId()));
+                }
+
+                // Recalcular el endDate según el tipo de tiempo y el número de veces
+                switch (ciclo.getTypeTime()) {
+                    case "Día":
+                        ciclo.setEndDate(arrivalDate.plusDays(ciclo.getTimes()));
+                        break;
+                    case "Semana":
+                        ciclo.setEndDate(arrivalDate.plusWeeks(ciclo.getTimes()));
+                        break;
+                    default:
+                        return Mono.error(new RuntimeException("Tipo de tiempo no válido: " + ciclo.getTypeTime()));
+                }
+
+                // Actualizar el ciclo de vida con el nuevo endDate
+                return cicloRepository.save(ciclo);
+            });
     }
+
 
     // Eliminar un ciclo físicamente por ID
     public Mono<Void> deleteCiclo(Long id) {

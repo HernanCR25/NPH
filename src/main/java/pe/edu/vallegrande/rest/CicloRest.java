@@ -50,10 +50,10 @@ public class CicloRest {
         return cicloService.getInactiveCiclos();
     }
 
-    // Crear un nuevo ciclo
+    // Crear un nuevo ciclo con cálculo de endDate
     @PostMapping
     public Mono<CicloModel> createCiclo(@RequestBody CicloModel ciclo) {
-        return cicloService.createCiclo(ciclo);
+        return cicloService.createCiclo(ciclo);  // El servicio se encargará de calcular el endDate
     }
 
     // Actualizar un ciclo existente

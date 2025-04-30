@@ -40,7 +40,26 @@ public class CicloModel {
     private String status;
 
     @Transient
-    private String timesInWeeks;  // Este campo proviene de la vista
+    private String timesInWeeks; 
+    
+public String getTimesInWeeks() {
+    if (times == null) {
+        return null;
+    }
+    
+    if ("Semana".equals(typeTime)) {
+        return typeTime + " " + times;
+    }
+    
+    if ("Día".equals(typeTime)) {
+        // Como "times" ya es un Integer, no necesitamos convertirlo
+        int dias = times; // Usamos directamente el valor Integer
+        int semana = (dias - 1) / 7 + 1; // Día 1-7 es semana 1, 8-14 semana 2, etc.
+        return "Semana " + semana;
+    }
+    
+    return null; // Si no coincide con ninguno, retorna null
+
+
 }
-
-
+}
