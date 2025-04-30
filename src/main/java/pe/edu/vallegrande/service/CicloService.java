@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 import org.springframework.web.reactive.function.client.WebClient;
 import pe.edu.vallegrande.dto.VaccineDTO;
 import pe.edu.vallegrande.dto.HenDTO;
+import pe.edu.vallegrande.dto.FoodDTO;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
@@ -164,5 +165,19 @@ public class CicloService {
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
         .bodyToMono(HenDTO.class);  // Retorna un Mono con el DTO de Shed
+    }
+        // WebClient para consumir datos de FOOD
+    private final WebClient foodWebClient = WebClient.builder()
+            .baseUrl("https://8080-josegallardop-backendva-rtkkwwzk37v.ws-us118.gitpod.io/api/foods") // Ajusta la URL si cambia
+            .defaultHeader("Content-Type", "application/json")
+            .build();
+
+    // Método para consumir los datos de Shed desde otro microservicio
+    public Mono<FoodDTO> getFoodFromExternal(Long idFood) {
+        return foodWebClient.get()
+                .uri("/{id}", idFood) // Usa el idFood como parámetro en la URL
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(FoodDTO.class);  // Retorna un Mono con el DTO de Shed
     }
 }

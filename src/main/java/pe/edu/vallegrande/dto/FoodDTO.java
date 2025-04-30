@@ -1,22 +1,25 @@
 package pe.edu.vallegrande.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class FoodDTO {
-    private Long shedId;  // Campo para el shedId
 
-    // Getter y Setter para shedId
-    public Long getShedId() {
-        return shedId;
+    @JsonProperty("id_food")
+    private Long idFood;
+
+    public Long getIdFood() {
+        return idFood;
     }
 
-    public void setShedId(Long shedId) {
-        this.shedId = shedId;
+    public void setIdFood(Long idFood) {
+        this.idFood = idFood;
     }
 
-    // Método toString para depuración
     @Override
     public String toString() {
-        return "ShedDTO{" +
-               "shedId=" + shedId +
+        return "FoodDTO{" +
+               "idFood=" + idFood +
                '}';
     }
 }
+
