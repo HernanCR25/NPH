@@ -168,7 +168,7 @@ public class CicloService {
     }
         // WebClient para consumir datos de FOOD
     private final WebClient foodWebClient = WebClient.builder()
-            .baseUrl("https://msfood-production-689f.up.railway.app/api/foods") // Ajusta la URL si cambia
+            .baseUrl("https://ms-foods.onrender.com/api/foods") // Ajusta la URL si cambia
             .defaultHeader("Content-Type", "application/json")
             .build();
 
