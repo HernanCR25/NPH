@@ -14,7 +14,7 @@ public class CorsConfig {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList("https://orange-space-rotary-phone-r4644wj7r4xvcpq74-4200.app.github.dev", "https://nph-ciclodevida.onrender.com/cicloVida"));
+        corsConfig.setAllowedOrigins(Arrays.asList("https://vallegrande-vgwebdashbo-mvhhv12wpdh.ws-us118.gitpod.io", "https://nph-ciclodevida.onrender.com/cicloVida"));
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         corsConfig.setAllowCredentials(true);
