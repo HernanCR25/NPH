@@ -15,7 +15,7 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         // Permitir un origen específico en lugar de "*"
-        corsConfig.addAllowedOrigin("https://orange-space-rotary-phone-r4644wj7r4xvcpq74-4200.app.github.dev");
+        corsConfig.addAllowedOrigin("https://vallegrande-vgwebdashbo-mvhhv12wpdh.ws-us118.gitpod.io");
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         corsConfig.setAllowCredentials(true);
