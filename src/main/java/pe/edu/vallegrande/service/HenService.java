@@ -87,7 +87,7 @@ public class HenService {
 
     // WebClient para consumir datos de Shed
     private final WebClient shedWebClient = WebClient.builder()
-    .baseUrl("https://scaling-spoon-g4r77vjxgqqxhw566-8084.app.github.dev/NPH/sheds") // Ajusta la URL si cambia
+    .baseUrl("https://vaccine-z4vj.onrender.com/NPH/sheds") // Ajusta la URL si cambia
     .defaultHeader("Content-Type", "application/json")
     .build();
 
