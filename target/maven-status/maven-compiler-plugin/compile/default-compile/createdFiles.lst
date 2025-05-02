@@ -6,5 +6,6 @@ pe/edu/vallegrande/CicloVidaApplication$Myconfiguration.class
 pe/edu/vallegrande/dto/HenDTO.class
 pe/edu/vallegrande/repository/CicloRepository.class
 pe/edu/vallegrande/dto/VaccineDTO.class
+pe/edu/vallegrande/foods/config/CorsConfig.class
 pe/edu/vallegrande/service/CicloService.class
 pe/edu/vallegrande/rest/CicloRest.class

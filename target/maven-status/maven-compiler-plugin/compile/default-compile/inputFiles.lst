@@ -1,4 +1,5 @@
 /workspaces/NPH/src/main/java/pe/edu/vallegrande/CicloVidaApplication.java
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/config/CorsConfig.java
 /workspaces/NPH/src/main/java/pe/edu/vallegrande/dto/FoodDTO.java
 /workspaces/NPH/src/main/java/pe/edu/vallegrande/dto/HenDTO.java
 /workspaces/NPH/src/main/java/pe/edu/vallegrande/dto/VaccineDTO.java
