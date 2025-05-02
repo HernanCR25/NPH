@@ -6,15 +6,18 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 public class CorsConfig {
 
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.addAllowedOrigin("https://4200-vallegrande-vgwebdashbo-as4b42tjsg3.ws-us118.gitpod.io");
-        corsConfig.addAllowedMethod("*");
-        corsConfig.addAllowedHeader("*");
+        // Permitir un origen específico en lugar de "*"
+        corsConfig.addAllowedOrigin("https://orange-space-rotary-phone-r4644wj7r4xvcpq74-4200.app.github.dev");
+        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         corsConfig.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -5,9 +5,9 @@ spring:
   application:
     name: foods   
   r2dbc:
-    url: r2dbc:pool:postgresql://aws-0-us-east-1.pooler.supabase.com:6543/postgres
-    username: postgres.axzbiriaypunthimexpq
-    password: foods2024@vg
+    url: r2dbc:pool:postgresql://food_owner:npg_xpMTt67ugfvJ@ep-summer-mountain-a440nkjh-pooler.us-east-1.aws.neon.tech/food?sslmode=require
+    username: food_owner
+    password: npg_xpMTt67ugfvJ
   #security:
     #oauth2:
       #resourceserver:
