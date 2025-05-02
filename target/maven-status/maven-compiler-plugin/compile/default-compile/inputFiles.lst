@@ -1,0 +1,8 @@
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/foods/FoodsApplication.java
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/foods/config/CorsConfig.java
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/foods/config/SecurityConfig.java
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/foods/controller/FoodController.java
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/foods/dto/FoodRequest.java
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/foods/model/Food.java
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/foods/repository/FoodRepository.java
+/workspaces/NPH/src/main/java/pe/edu/vallegrande/foods/service/FoodService.java
