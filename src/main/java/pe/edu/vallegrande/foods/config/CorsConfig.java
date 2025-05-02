@@ -15,7 +15,7 @@ public class CorsConfig {
         corsConfig.addAllowedOrigin("https://4200-vallegrande-vgwebdashbo-as4b42tjsg3.ws-us118.gitpod.io");
         corsConfig.addAllowedMethod("*");
         corsConfig.addAllowedHeader("*");
-        corsConfig.setAllowCredentials(true);
+        corsConfig.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
