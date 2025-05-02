@@ -1,10 +1,5 @@
-FROM maven:3.8-openjdk-17 AS build
-WORKDIR /app
-COPY . .
-RUN mvn package -DskipTests
+FROM amazoncorretto:17-alpine-jdk
 
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-ENV PORT=8087
-CMD ["sh", "-c", "java -Dserver.port=$PORT -jar app.jar"]
+COPY target/hens-0.0.1-SNAPSHOT.jar /api-v1.jar
+
+ENTRYPOINT ["java", "-jar", "/api-v1.jar"]
