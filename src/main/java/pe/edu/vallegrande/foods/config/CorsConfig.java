@@ -14,8 +14,12 @@ public class CorsConfig {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        // Permitir un origen específico en lugar de "*"
-        corsConfig.addAllowedOrigin("https://4200-vallegrande-vgwebdashbo-mvhhv12wpdh.ws-us118.gitpod.io");
+
+        corsConfig.setAllowedOrigins(Arrays.asList(
+            "https://4200-vallegrande-vgwebdashbo-mvhhv12wpdh.ws-us118.gitpod.io",
+            "https://4200-vallegrande-vgwebdashbo-7wz0tlpfi8q.ws-us118.gitpod.io",
+            "http://localhost:4200"
+        ));
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         corsConfig.setAllowCredentials(true);
