@@ -19,7 +19,7 @@ public class CorsConfig {
                 "https://nph-ciclodevida.onrender.com/cicloVida",
                 "https://4200-vallegrande-vgwebdashbo-8a58inu3ult.ws-us118.gitpod.io",
                 "https://4200-vallegrande-vgwebdashbo-7wz0tlpfi8q.ws-us118.gitpod.io",
-                "https://4200-vallegrande-vgwebdashbo-r6vfykaqkjn.ws-us118.gitpod.io",
+                "https://4200-vallegrande-vgwebdashbo-r6vfykaqkjn.ws-us119.gitpod.io",
                 "http://localhost:4200"
         ));
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
