@@ -44,6 +44,7 @@ class CicloServiceTest {
                 .verifyComplete();
 
         verify(cicloRepository).findAll();
+        System.out.println("testGetAllCiclos pasó correctamente");
     }
 
     @Test
@@ -56,6 +57,7 @@ class CicloServiceTest {
                 .verifyComplete();
 
         verify(cicloRepository).findById(1L);
+        System.out.println("testGetCicloById pasó correctamente");
     }
 
     @Test
@@ -80,6 +82,7 @@ class CicloServiceTest {
 
         verify(cicloService).getHenFromExternal(10L);
         verify(cicloRepository).save(ciclo);
+        System.out.println("testCreateCiclo_withValidHenAndDayType pasó correctamente");
     }
 
     @Test
@@ -100,6 +103,7 @@ class CicloServiceTest {
 
         verify(cicloService).getHenFromExternal(10L);
         verify(cicloRepository, never()).save(any());
+        System.out.println("testCreateCiclo_withInvalidTypeTime pasó correctamente");
     }
 
     @Test
@@ -120,6 +124,7 @@ class CicloServiceTest {
 
         verify(cicloService).getHenFromExternal(10L);
         verify(cicloRepository, never()).save(any());
+        System.out.println("testCreateCiclo_withNullArrivalDate pasó correctamente");
     }
 
     @Test
@@ -130,6 +135,7 @@ class CicloServiceTest {
                 .verifyComplete();
 
         verify(cicloRepository).deleteById(1L);
+        System.out.println("testDeleteCiclo pasó correctamente");
     }
 
     @Test
@@ -147,6 +153,7 @@ class CicloServiceTest {
 
         verify(cicloRepository).findById(1L);
         verify(cicloRepository).save(ciclo);
+        System.out.println("testDeactivateCiclo pasó correctamente");
     }
 
     @Test
@@ -164,6 +171,7 @@ class CicloServiceTest {
 
         verify(cicloRepository).findById(1L);
         verify(cicloRepository).save(ciclo);
+        System.out.println("testActivateCiclo pasó correctamente");
     }
 
 }
