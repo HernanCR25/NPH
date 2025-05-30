@@ -4,4 +4,5 @@ pe/edu/vallegrande/foods/controller/FoodController.class
 pe/edu/vallegrande/foods/FoodsApplication.class
 pe/edu/vallegrande/foods/config/CorsConfig.class
 pe/edu/vallegrande/foods/repository/FoodRepository.class
+pe/edu/vallegrande/foods/config/CorsConfig$1.class
 pe/edu/vallegrande/foods/model/Food.class
