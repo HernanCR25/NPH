@@ -12,7 +12,6 @@ import reactor.test.StepVerifier;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 
 public class HenServiceTest {
 
@@ -33,6 +32,8 @@ public class HenServiceTest {
         StepVerifier.create(henService.getAllHens())
                 .expectNext(hen)
                 .verifyComplete();
+
+        System.out.println("✅ test obtener todas las gallinas pasó");
     }
 
     @Test
@@ -43,6 +44,8 @@ public class HenServiceTest {
         StepVerifier.create(henService.getHenById(1L))
                 .expectNext(hen)
                 .verifyComplete();
+
+        System.out.println("✅ test obtener gallina por ID pasó");
     }
 
     @Test
@@ -54,6 +57,8 @@ public class HenServiceTest {
         StepVerifier.create(henService.findByArrivalDate(date))
                 .expectNext(hen)
                 .verifyComplete();
+
+        System.out.println("✅ test búsqueda por fecha pasó");
     }
 
     @Test
@@ -64,6 +69,8 @@ public class HenServiceTest {
         StepVerifier.create(henService.getActiveHens())
                 .expectNext(hen)
                 .verifyComplete();
+
+        System.out.println("✅ test obtener gallinas activas pasó");
     }
 
     @Test
@@ -75,6 +82,8 @@ public class HenServiceTest {
         StepVerifier.create(henService.createHen(hen))
                 .expectNext(savedHen)
                 .verifyComplete();
+
+        System.out.println("✅ test crear gallina pasó");
     }
 
     @Test
@@ -89,6 +98,8 @@ public class HenServiceTest {
         StepVerifier.create(henService.updateHen(1L, updatedData))
                 .expectNext(updatedHen)
                 .verifyComplete();
+
+        System.out.println("✅ test actualizar gallina pasó");
     }
 
     @Test
@@ -97,6 +108,8 @@ public class HenServiceTest {
 
         StepVerifier.create(henService.deleteHen(1L))
                 .verifyComplete();
+
+        System.out.println("✅ test eliminar gallina pasó");
     }
 
     @Test
@@ -110,6 +123,8 @@ public class HenServiceTest {
         StepVerifier.create(henService.deactivateHen(1L))
                 .expectNext(deactivated)
                 .verifyComplete();
+
+        System.out.println("✅ test desactivar gallina pasó");
     }
 
     @Test
@@ -123,5 +138,7 @@ public class HenServiceTest {
         StepVerifier.create(henService.activateHen(1L))
                 .expectNext(activated)
                 .verifyComplete();
+
+        System.out.println("✅ test activar gallina pasó");
     }
 }
